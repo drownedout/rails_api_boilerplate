@@ -13,6 +13,14 @@ module ExceptionHandler
 
   included do
   	# Define custom handlers
+    rescue_from ActiveRecord::RecordNotFound do |e|
+      json_response({ message: e.message }, :not_found)
+    end
+
+    rescue_from ActiveRecord::RecordInvalid do |e|
+      json_response({ message: e.message }, :unprocessable_entity)
+    end
+    
   	rescue_from ActiveRecord::RecordInvalid, with: :four_twenty_two
   	rescue_from ExceptionHandler::AuthenticationError, with: :unauthorized_request
   	rescue_from ExceptionHandler::RecordInvalid, with: :four_twenty_two
